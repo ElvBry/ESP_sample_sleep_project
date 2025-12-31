@@ -5,16 +5,13 @@
 #include "esp_err.h"
 #include "freertos/queue.h"
 
-// This is a helper component in order to safely input and output char strings to serial
+// Helper component in order to safely input and output char strings to serial, accepts both CR (\r) and LF (\n) as command terminators
 
 #define EVT_QUEUE_SIZE 8
 #define CMD_QUEUE_SIZE 8
 
 
 #define MAX_CMD_LEN 16
-#define INPUT_END_CH '\n' // Character indicating end of input
-
-#define TIMEOUT_DURATION_MS 10
 
 typedef struct {
     char    str[MAX_CMD_LEN];
@@ -22,9 +19,16 @@ typedef struct {
 } command_t;
 
 /**
- * @brief Initialize UART component
+ * @brief Initialize UART component with character-by-character input handling
+ *
+ * Initializes UART0 at 115200 baud with the following behavior:
+ * - Characters are echoed immediately for user feedback
+ * - Commands are limited to MAX_CMD_LEN characters counting null terminator
+ * - Characters beyond 15 are echoed but discarded until line ending
+ * - Accepts both CR (\r) and LF (\n) as command terminators
+ * - Commands are sent to queue when CR or LF is received
+ *
  * @return ESP_OK on success, ESP_FAIL on failure
- * @param uxPriority Priority of the uart input task for freeRTOS
  */
 esp_err_t uart_handler_init();
 
