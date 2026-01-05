@@ -11,7 +11,7 @@
 #define CMD_QUEUE_SIZE 8
 
 
-#define MAX_CMD_LEN 16
+#define MAX_CMD_LEN 64 // including null terminator, feel free to adjust as needed
 
 typedef struct {
     char    str[MAX_CMD_LEN];
